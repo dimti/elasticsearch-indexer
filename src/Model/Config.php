@@ -30,7 +30,7 @@ class Config
      *
      * @return array
      */
-    public static function get($config)
+    public static function load($config)
     {
         return require ESI_PATH.'config/'.$config.'.php';
     }
@@ -48,7 +48,7 @@ class Config
         if ($o !== null) {
             return $o;
         }
-        $defaults = static::get('defaults');
+        $defaults = static::load('defaults');
 
         return $defaults[$key];
     }
@@ -75,5 +75,24 @@ class Config
     public static function optionKey($key)
     {
         return static::OPTION_PREFIX.$key;
+    }
+
+    public static function getHosts()
+    {
+        $hosts = [];
+        foreach (explode(',', static::option('hosts')) as $h) {
+            if (strpos($h, '://') === false) {
+                $hosts[] = 'http://'.$h;
+            } else {
+                $hosts[] = $h;
+            }
+        }
+
+        return $hosts;
+    }
+
+    public static function getFirstHost()
+    {
+        return static::getHosts()[0];
     }
 }

@@ -12,13 +12,29 @@ use Wallmander\ElasticsearchIndexer\Model\Config;
         <?php settings_fields('esi_options_group'); ?>
         <?php do_settings_sections('esi_options_group'); ?>
         <table class="form-table">
+
             <tr valign="top">
-                <th>Host</th>
+                <th>Enable Integration</th>
+                <td>
+                    <input type="hidden" name="<?php echo Config::optionKey('enable_integration') ?>"
+                           value="0"/>
+                    <input type="checkbox" name="<?php echo Config::optionKey('enable_integration') ?>"
+                           value="1" <?php echo Config::option('enable_integration') ? 'checked="checked"' : ''; ?>/>
+
+                    <p class="description">Posts will still be synced if disabled.</p>
+                </td>
+            </tr>
+
+            <tr valign="top">
+                <th>Host(s)</th>
                 <td>
                     <input type="text" name="<?php echo Config::optionKey('hosts') ?>"
                            value="<?php echo Config::option('hosts'); ?>"/>
 
-                    <p class="description">Multiple separated by commas</p>
+                    <p class="description">
+                        Example: <code>127.0.0.1:9000</code>, <code>http://127.0.0.1:9000</code> or <code>https://127.0.0.1:9000</code><br>
+                        Multiple separated by commas. No spaces.
+                    </p>
                 </td>
             </tr>
 
@@ -64,6 +80,28 @@ use Wallmander\ElasticsearchIndexer\Model\Config;
                            value="1" <?php echo Config::option('include_posts_from_child_taxonomies') ? 'checked="checked"' : ''; ?>/>
 
                     <p class="description">Include posts from child taxonomies</p>
+                </td>
+            </tr>
+            <tr valign="top">
+                <th>Enable Profiler Frontend</th>
+                <td>
+                    <input type="hidden" name="<?php echo Config::optionKey('profile_frontend') ?>"
+                           value="0"/>
+                    <input type="checkbox" name="<?php echo Config::optionKey('profile_frontend') ?>"
+                           value="1" <?php echo Config::option('profile_frontend') ? 'checked="checked"' : ''; ?>/>
+
+                    <p class="description"></p>
+                </td>
+            </tr>
+            <tr valign="top">
+                <th>Enable Profiler Admin</th>
+                <td>
+                    <input type="hidden" name="<?php echo Config::optionKey('profile_admin') ?>"
+                           value="0"/>
+                    <input type="checkbox" name="<?php echo Config::optionKey('profile_admin') ?>"
+                           value="1" <?php echo Config::option('profile_admin') ? 'checked="checked"' : ''; ?>/>
+
+                    <p class="description"></p>
                 </td>
             </tr>
         </table>

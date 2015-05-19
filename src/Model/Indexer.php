@@ -33,9 +33,6 @@ class Indexer extends Client
         add_filter('esi_skip_query_integration', '__return_true');
         $indexed = 0;
         $total   = 0;
-        if ($from == 0) {
-            //$this->setRefreshInterval('-1');
-        }
         if (is_multisite()) {
             foreach (wp_get_sites() as $site) {
                 switch_to_blog($site['blog_id']);
@@ -53,7 +50,6 @@ class Indexer extends Client
         }
         if ($indexed >= $total) {
             echo "Finished indexing $indexed/$total posts…\n";
-            $this->setRefreshInterval('10s');
             Service\Elasticsearch::optimize();
         } else {
             echo "Indexed  $indexed/$total posts…\n";
@@ -107,8 +103,8 @@ class Indexer extends Client
         $this->indices()->create([
             'index' => $indexName,
             'body'  => [
-                'settings' => Config::get('settings'),
-                'mappings' => Config::get('mappings'),
+                'settings' => Config::load('settings'),
+                'mappings' => Config::load('mappings'),
             ],
         ]);
     }
@@ -294,18 +290,6 @@ class Indexer extends Client
             }
         }
 
-        //Add parent slug
-        foreach ($post_args->terms as $taxSlug => $terms) {
-            foreach ($terms as $i => $termData) {
-                $post_args->terms[$taxSlug][$i]['all_slugs'] = [$termData['slug']];
-                if ($termData['parent']) {
-                    if ($parent = get_term_by('id', $termData['parent'], $taxSlug)) {
-                        $post_args->terms[$taxSlug][$i]['all_slugs'][] = $parent->slug;
-                    }
-                }
-            }
-        }
-
         $post_args = apply_filters('esi_post_sync_args', $post_args, $post->ID);
 
         return $post_args;
@@ -342,41 +326,38 @@ class Indexer extends Client
      * @param $post
      *
      * @return array
-     *
-     * @author 10up/ElasticPress
      */
     protected static function prepareTerms($post)
     {
-        $taxonomies          = get_object_taxonomies($post->post_type, 'objects');
-        $selected_taxonomies = [];
+        $taxonomies = get_object_taxonomies($post->post_type, 'objects');
+        $terms      = [];
 
         foreach ($taxonomies as $taxonomy) {
-            if ($taxonomy->public) {
-                $selected_taxonomies[] = $taxonomy;
-            }
-        }
+            $objectTerms = get_the_terms($post->ID, $taxonomy->name);
 
-        $selected_taxonomies = apply_filters('ep_sync_taxonomies', $selected_taxonomies, $post);
-
-        if (empty($selected_taxonomies)) {
-            return [];
-        }
-
-        $terms = [];
-
-        foreach ($selected_taxonomies as $taxonomy) {
-            $object_terms = get_the_terms($post->ID, $taxonomy->name);
-
-            if (!$object_terms || is_wp_error($object_terms)) {
+            if (is_wp_error($objectTerms)) {
                 continue;
             }
 
-            foreach ($object_terms as $term) {
+            if (!$objectTerms) {
+                $terms[$taxonomy->name] = [];
+                continue;
+            }
+
+            foreach ($objectTerms as $term) {
+                $allSlugs = [$term->slug];
+
+                //Add parent slug
+                if ($parent = get_term_by('id', $term->parent, $term->taxonomy)) {
+                    $allSlugs[] = $parent->slug;
+                }
+
                 $terms[$term->taxonomy][] = [
-                    'term_id' => $term->term_id,
-                    'slug'    => $term->slug,
-                    'name'    => $term->name,
-                    'parent'  => $term->parent,
+                    'term_id'   => $term->term_id,
+                    'slug'      => $term->slug,
+                    'name'      => $term->name,
+                    'parent'    => $term->parent,
+                    'all_slugs' => $allSlugs,
                 ];
             }
         }
