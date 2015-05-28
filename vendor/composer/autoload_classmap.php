@@ -545,4 +545,5 @@ return array(
     'Wallmander\\ElasticsearchIndexer\\Model\\Query\\BuilderTrait' => $baseDir . '/src/Model/Query/BuilderTrait.php',
     'Wallmander\\ElasticsearchIndexer\\Model\\Query\\WpConverterTrait' => $baseDir . '/src/Model/Query/WpConverterTrait.php',
     'Wallmander\\ElasticsearchIndexer\\Model\\Service\\Elasticsearch' => $baseDir . '/src/Model/Service/Elasticsearch.php',
+    'Wallmander\\ElasticsearchIndexer\\Model\\Service\\WordPress' => $baseDir . '/src/Model/Service/WordPress.php',
 );
