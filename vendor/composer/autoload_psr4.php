@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Wallmander\\ElasticsearchIndexer\\' => array($baseDir . '/src'),
+    'Symfony\\Component\\EventDispatcher\\' => array($vendorDir . '/symfony/event-dispatcher'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
     'Elasticsearch\\' => array($vendorDir . '/elasticsearch/elasticsearch/src/Elasticsearch'),
 );
