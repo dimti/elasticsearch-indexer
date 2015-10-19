@@ -18,12 +18,12 @@ return [
     'is_indexing'              => false,
 
     // User settings
-    'integration_level'        => Config::INTEGRATION_LEVEL_FULL,
+    'integration_level'        => Config::INTEGRATION_LEVEL_SEARCH,
     'hosts'                    => '127.0.0.1:9200',
     'index_name'               => null,
     'shards'                   => 5,
     'replicas'                 => 1,
-    'index_private_post_types' => true,
+    'index_private_post_types' => false,
     'profile_admin'            => false,
     'profile_frontend'         => false,
 ];
