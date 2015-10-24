@@ -359,7 +359,7 @@ class WpConverter
                                 'post_excerpt',
                             ]),
                             'like_text'      => $value,
-                            'min_similarity' => apply_filters('esi_min_similarity', 0.75),
+                            'min_similarity' => apply_filters('esi_min_similarity', 0.95),
                         ],
                     ],
                 ],
