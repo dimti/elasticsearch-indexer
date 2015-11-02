@@ -22,7 +22,7 @@ return [
                 'type'      => 'custom',
                 'tokenizer' => 'standard',
                 'filter'    => ['standard', 'lowercase', 'stop', 'esi_ngram', 'esi_snowball'],
-                'language'  => apply_filters('esi_analyzer_language', 'English'),
+                'language'  => apply_filters('esi_analyzer_language', 'Russian'),
             ],
             'esi_index_analyzer' => [
                 'type'      => 'custom',
@@ -43,7 +43,7 @@ return [
             ],
             'esi_snowball' => [
                 'type'     => 'snowball',
-                'language' => apply_filters('esi_analyzer_language', 'English'),
+                'language' => apply_filters('esi_analyzer_language', 'Russian'),
             ],
         ],
     ],

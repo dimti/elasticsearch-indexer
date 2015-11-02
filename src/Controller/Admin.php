@@ -38,7 +38,7 @@ class Admin
             'esindexer_index',
             [get_class(), 'getIndex'],
             'dashicons-networking',
-            30
+            31
         );
         add_submenu_page(
             'esindexer_index',
